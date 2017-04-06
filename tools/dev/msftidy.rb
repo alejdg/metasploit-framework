@@ -578,7 +578,7 @@ class Msftidy
       next if ln =~ /^[[:space:]]*#/
 
       if ln =~ /\$std(?:out|err)/i or ln =~ /[[:space:]]puts/
-        next if ln =~ /^[\s]*["][^"]+\$std(?:out|err)/
+        next if ln =~ /["'][^"'\n]*\$std(?:out|err)(?:[^'"\n]*["']|)/
         no_stdio = false
         error("Writes to stdout", idx)
       end
@@ -618,7 +618,7 @@ class Msftidy
   end
 
   def check_vars_get
-    test = @source.scan(/send_request_cgi\s*\(\s*\{?\s*['"]uri['"]\s*=>\s*[^=})]*?\?[^,})]+/im)
+    test = @source.scan(/send_request_cgi\s*\(?\s*\{?\s*['"]uri['"]\s*=>\s*[^=})]*?\?[^,})]+/im)
     unless test.empty?
       test.each { |item|
         info("Please use vars_get in send_request_cgi: #{item}")
@@ -684,6 +684,15 @@ class Msftidy
     end
   end
 
+  # Check for modules using the deprecated architectures
+  #
+  # @see https://github.com/rapid7/metasploit-framework/pull/7507
+  def check_arch
+    if @source =~ /ARCH_X86_64/
+      error('Please don\'t use the ARCH_X86_64 architecture, use ARCH_X64 instead')
+    end
+  end
+
   #
   # Run all the msftidy checks.
   #
@@ -717,6 +726,7 @@ class Msftidy
     check_print_debug
     check_register_datastore_debug
     check_use_datastore_debug
+    check_arch
   end
 
   private

@@ -1,16 +1,20 @@
+dist: trusty
 sudo: false
 group: stable
 bundler_args: --without coverage development pcap
 cache: bundler
 addons:
-  postgresql: '9.3'
+  postgresql: '9.6'
   apt:
     packages:
       - libpcap-dev
       - graphviz
 language: ruby
 rvm:
-  - '2.3.1'
+  - '2.1'
+  - '2.2'
+  - '2.3.3'
+  - '2.4.1'
 
 env:
   - RAKE_TASKS="cucumber cucumber:boot" CREATE_BINSTUBS=true

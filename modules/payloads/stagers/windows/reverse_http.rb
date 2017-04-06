@@ -9,7 +9,7 @@ require 'msf/core/payload/windows/reverse_http'
 
 module MetasploitModule
 
-  CachedSize = 327
+  CachedSize = 339
 
   include Msf::Payload::Stager
   include Msf::Payload::Windows
@@ -26,5 +26,4 @@ module MetasploitModule
       'Handler'     => Msf::Handler::ReverseHttp,
       'Convention'  => 'sockedi http'))
   end
-
 end
